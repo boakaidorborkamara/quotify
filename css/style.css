@@ -1,0 +1,10 @@
+#btn-arrow{
+    /* display: none; */
+    color: white;
+}
+
+
+#author-btn:hover{
+    background-color: rgb(9, 9, 9);
+    color: whitesmoke;
+}
