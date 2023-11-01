@@ -1,5 +1,5 @@
 let random_quote = document.getElementById("random-quote");
-let author_section = document.getElementById("author-section");
+let author_btn = document.getElementById("author-btn");
 let author = document.getElementById("author");
 let genre = document.getElementById("genre");
 let next_btn = document.getElementById("next-btn");
@@ -12,8 +12,9 @@ const BASE_URL = "https://quote-garden.onrender.com";
 
 window.addEventListener("load", async ()=>{
     console.log("windows loaded");
-    displayQuote();
-    next_btn.addEventListener("click", displayQuote);
+    displayRandomQuote();
+    next_btn.addEventListener("click", displayRandomQuote);
+    author_btn.addEventListener("click", displayQuotesBaseOnAuthor)
 })
 
 
@@ -24,15 +25,17 @@ const fetchData = async (url)=>{
     return data;
 }
 
-const displayQuote = async ()=>{
+const displayRandomQuote = async ()=>{
     
    let data =  await fetchData(BASE_URL+"/api/v3/quotes/random");
-   console.log("DATA", data.statusCode);
+   
 
    if(data.statusCode === 200){
     loading_screen.classList.add("d-none");
     quote_section.classList.remove("d-none");
+    author_quotes_section.classList.add("d-none");
    }
+
    
 
    data.data.forEach(ele => {
@@ -42,6 +45,53 @@ const displayQuote = async ()=>{
         genre.innerText = ele.quoteGenre;
    });
 }
+
+const displayQuotesBaseOnAuthor = async ()=>{
+
+    let html_element_for_author_name = ` <!-- author name  -->
+    <div class=" d-flex justify-content-between align-items-center mt-5 p-4 btn" >
+        <div>
+            <h4 class="m-0 fw-bold">Bill Gates</h4>
+        </div>
+    </div>
+`;
+
+
+   
+
+
+    console.log("autorid")
+    let author_name = author.innerText;
+    console.log(author_name)
+    
+    let data =  await fetchData(BASE_URL+"/api/v3/quotes?author="+author_name);
+
+    loading_screen.classList.remove("d-none");
+    quote_section.classList.add("d-none");
+    if(data){
+        loading_screen.classList.add("d-none");
+        author_quotes_section.classList.remove("d-none");
+    }
+    console.log("DATAss", data);
+
+    
+
+    data.data.forEach((ele)=>{
+        console.log(ele);
+        let html_element_for_author_quotes = ` 
+    
+        <!-- list of all author quotes  -->
+        <div class="border-start border-5 border-success mb-5">
+            <p class="ps-4">${ele.quoteText}
+            </p>
+        </div>`;
+
+        author_quotes_section.insertAdjacentHTML("beforeend", html_element_for_author_quotes)
+
+    })
+}
+
+
 
 
 
