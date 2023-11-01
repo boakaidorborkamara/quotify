@@ -2,6 +2,7 @@ let random_quote = document.getElementById("random-quote");
 let author_section = document.getElementById("author-section");
 let author = document.getElementById("author");
 let genre = document.getElementById("genre");
+let next_btn = document.getElementById("next-btn");
 
 const BASE_URL = "https://quote-garden.onrender.com";
 let is_loading = true;
@@ -9,6 +10,7 @@ let is_loading = true;
 window.addEventListener("load", async ()=>{
     console.log("windows loaded");
     displayQuote();
+    next_btn.addEventListener("click", displayQuote);
 })
 
 
