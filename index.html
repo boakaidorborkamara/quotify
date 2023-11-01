@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <header class="shadow-sm">
+    <header class="shadow-sm  bg-light">
         <nav class="container p-4 fw-bold d-flex justify-content-between align-items-center">
             <h3><i class="bi bi-chat-left-quote-fill text-success"></i><span>Quotify</span></h3>
             <div>
@@ -20,9 +20,8 @@
             </div>
         </nav>
     </header>
-    <main  >
-        
-        <div class="container d-flex flex-column  justify-content-center justify-content-center align-items-center mt-5 ">
+    <main style="height: 85vh;" >
+        <div class="pt-5 container d-flex flex-column  justify-content-center justify-content-center align-items-center" >
 
             <!-- loading screen -->
             <div class=" d-flex align-items-center" style="height: 70vh;" id="loading-screen">
@@ -33,8 +32,8 @@
             </div>
             
             <!-- current random quote section  -->
-            <section class=" d-none p-2 w-50 fs-4 pt-5 mt-5 " id="quote-section">
-                <div class="border-start border-5 border-success">
+            <section class=" d-none w-75 fs-4  " id="quote-section">
+                <div class="border-start border-5 border-success mt-5">
                     <p class="ps-4" id="random-quote">“The first rule of any technology used in a business is that automation applied to an efficient operation will magnify the efficiency. The second is that automation applied to an inefficient operation will magnify the inefficiency.”
                     </p>
                 </div>
@@ -50,7 +49,7 @@
             </section>
 
             <!-- list of author quote section  -->
-            <section class=" d-none w-50 mw-100 fs-4 " id="author-quotes-section">
+            <section class=" d-none w-75 mw-100 fs-4  " id="author-quotes-section">
                 <!-- author name  -->
                 <!-- <div class=" d-flex justify-content-between align-items-center mt-5 p-4 btn" >
                     <div>
@@ -59,8 +58,6 @@
                 </div> -->
             </section>
         </div>
-      
-        
     </main>
     <script src="./script/script.js"></script>
 </body>

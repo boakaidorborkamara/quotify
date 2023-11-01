@@ -1,3 +1,7 @@
+header{
+    z-index: 100;
+}
+
 #btn-arrow{
     color: white;
 }
