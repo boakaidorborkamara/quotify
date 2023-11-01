@@ -48,18 +48,7 @@ const displayRandomQuote = async ()=>{
 
 const displayQuotesBaseOnAuthor = async ()=>{
 
-    let html_element_for_author_name = ` <!-- author name  -->
-    <div class=" d-flex justify-content-between align-items-center mt-5 p-4 btn" >
-        <div>
-            <h4 class="m-0 fw-bold">Bill Gates</h4>
-        </div>
-    </div>
-`;
-
-
-   
-
-
+    author_quotes_section.innerHTML = "";
     console.log("autorid")
     let author_name = author.innerText;
     console.log(author_name)
@@ -76,13 +65,26 @@ const displayQuotesBaseOnAuthor = async ()=>{
 
     
 
+    let html_element_for_author_name = ` <!-- author name  -->
+    <div class=" d-flex justify-content-between align-items-center my-5 p-4 btn" >
+        <div>
+            <h3 class="m-0 fw-bold"><span class="text-muted">Quotes from: </span>${author_name}</h3>
+        </div>
+    </div>
+    `;
+
+    author_quotes_section.insertAdjacentHTML("afterbegin", html_element_for_author_name)
+
+
+
+
     data.data.forEach((ele)=>{
         console.log(ele);
         let html_element_for_author_quotes = ` 
     
         <!-- list of all author quotes  -->
         <div class="border-start border-5 border-success mb-5">
-            <p class="ps-4">${ele.quoteText}
+            <p class="ps-4">"${ele.quoteText}"
             </p>
         </div>`;
 
