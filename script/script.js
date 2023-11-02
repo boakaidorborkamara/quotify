@@ -3,25 +3,37 @@ let get_started_section = document.getElementById("get-started-section");
 let header = document.getElementById("header");
 let quote_section = document.getElementById("quote-section");
 let category_dropdown_btn = document.getElementById("category-dropdown-btn");
-console.log(category_dropdown_btn);
 const BASE_URL = "https://quote-garden.onrender.com";
 
 
 window.addEventListener("load", async ()=>{
     console.log("windows loaded");
     getStarted(get_started_btn);
-    displayDropDownItems(category_dropdown_btn);
     
-    
-})
+});
+
+
+// get data from API 
+const fetchData = async (url)=>{
+    let response = await fetch(url);
+    let data = await response.json();
+    console.log(data);
+    return data;
+}
 
 // Enable user to leave the welcome screen and get started 
 function getStarted(btn){
-    btn.addEventListener("click", ()=>{
+    btn.addEventListener("click", async ()=>{
         console.log(btn);
         hideElement(get_started_section);
         showElement(header);
         showElement(quote_section);
+
+        // fetch and add items in the dropdown 
+        await displayDropDownItems(category_dropdown_btn);
+        getSelectedCategory(category_dropdown_btn);    
+
+
     })
 }
 
@@ -37,26 +49,34 @@ function showElement(ele){
 }
 
 async function displayDropDownItems(html_dropdown){
-
+    // HTML div containing dropdown items 
     let drop_down_container = html_dropdown.children[1];
-    
     let genres = await fetchData(BASE_URL+"/api/v3/genres");
-    console.log("genres", genres)
+    // dynamicly add dropdown items to dropdown container in the DOM 
     genres.data.forEach(ele => {
-        console.log(ele);
         let drop_down_element = `
         <a class="dropdown-item" href="#">${ele}</a>
         `;
         drop_down_container.insertAdjacentHTML("beforeend", drop_down_element);
     });
-    // console.log("BTN", dropdown_items);
+
 }
 
-const fetchData = async (url)=>{
-    let response = await fetch(url);
-    let data = await response.json();
-    console.log(data);
-    return data;
+getSelectedCategory = async (html_dropdown)=>{
+    // HTML div containing dropdown items 
+    let drop_down_container = await html_dropdown.children[1].children;
+
+    //loop and add event listener to each dropdown item
+    for(let i = 0; i < drop_down_container.length; i++){
+        let dropdown_items = drop_down_container[i];
+        dropdown_items.addEventListener("click", (e)=>{
+            let category_name = e.target.innerText;
+            console.log(category_name);
+            return category_name;
+        })
+    }
+    
+
 }
 
 
