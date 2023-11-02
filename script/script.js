@@ -32,7 +32,7 @@ const fetchData = async (url)=>{
 }
 
 // Enable user to leave the welcome screen and get started 
-function getStarted(btn){
+const getStarted = (btn)=>{
     btn.addEventListener("click", async ()=>{
         console.log(btn);
         hideElement(get_started_section);
@@ -92,18 +92,18 @@ const displayQuote = async (category)=>{
  }
 
 // accepts an HTML element node and hide the specific element from the DOM 
-function hideElement(ele){
+const hideElement = async (ele)=>{
     ele.classList.add("d-none");
 }
 
 // accepts an HTML hidden element node and display the specific element from the DOM 
-function showElement(ele){
+const showElement = async (ele)=>{
     ele.classList.remove("d-none");
     console.log(ele);
 }
 
 // fetch quote genres and display them in the dropdown element 
-async function displayDropDownItems(html_dropdown){
+const displayDropDownItems = async (html_dropdown)=>{
     // HTML div containing dropdown items 
     let drop_down_container = html_dropdown.children[1];
     let genres = await fetchData(BASE_URL+"/api/v3/genres");
@@ -118,7 +118,7 @@ async function displayDropDownItems(html_dropdown){
 }
 
 //get 
-getSelectedCategory = async (html_dropdown)=>{
+const getSelectedCategory = async (html_dropdown)=>{
     // HTML div containing dropdown items 
     let drop_down_container = await html_dropdown.children[1].children;
 
@@ -136,20 +136,19 @@ getSelectedCategory = async (html_dropdown)=>{
 
 }
 
-generateRandomQuote = (btn)=>{
+const generateRandomQuote = (btn)=>{
     btn.addEventListener("click", async ()=>{
         displayQuote(current_category);
     });
 }
 
-changeCategory = async(selected_category)=>{
+const changeCategory = async(selected_category)=>{
     current_category = selected_category;
     genre.innerText = current_category;
     displayQuote(selected_category);
 }
 
-controlButtonsDisplay = async()=>{
-    console.log(random_quote_btn);
+const controlButtonsDisplay = async()=>{
     if(current_category !== "random"){
         hideElement(random_quote_btn);
         showElement(previous_btn);
@@ -160,6 +159,10 @@ controlButtonsDisplay = async()=>{
         hideElement(previous_btn);
         hideElement(next_btn);
     }
+}
+
+const displayNextQuote = async()=>{
+    console.log("Working")
 }
 
 
