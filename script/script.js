@@ -13,12 +13,12 @@ console.log(random_quote_btn);
 console.log(author, genre, quote);
 
 const BASE_URL = "https://quote-garden.onrender.com";
-let category = "random";
+let current_category = "random";
 
 
 window.addEventListener("load", async ()=>{
     getStarted(get_started_btn);
-    generateRandom(random_quote_btn);
+    generateRandomQuote(random_quote_btn);
 });
 
 // get data from API 
@@ -38,6 +38,7 @@ function getStarted(btn){
         showElement(loading_screen);
         await displayDropDownItems(category_dropdown_btn);
         displayQuote();
+        getSelectedCategory(category_dropdown_btn);
 
     })
 }
@@ -55,7 +56,7 @@ const displayQuote = async ()=>{
           console.log(ele);
           quote.innerText = ele.quoteText;
           author.innerText = ele.quoteAuthor;
-          genre.innerText = category;
+          genre.innerText = current_category;
      });
 
      showElement(quote_section);
@@ -74,6 +75,7 @@ function showElement(ele){
     console.log(ele);
 }
 
+// fetch quote genres and display them in the dropdown element 
 async function displayDropDownItems(html_dropdown){
     // HTML div containing dropdown items 
     let drop_down_container = html_dropdown.children[1];
@@ -88,6 +90,7 @@ async function displayDropDownItems(html_dropdown){
 
 }
 
+//get 
 getSelectedCategory = async (html_dropdown)=>{
     // HTML div containing dropdown items 
     let drop_down_container = await html_dropdown.children[1].children;
@@ -98,19 +101,24 @@ getSelectedCategory = async (html_dropdown)=>{
         all_dropdown_items.addEventListener("click", (e)=>{
             let category_name = e.target.innerText;
             console.log(category_name);
-            return category_name;
+            changeCategory(category_name);
+            // return category_name;
         })
     }
     
 
 }
 
-generateRandom = (btn)=>{
+generateRandomQuote = (btn)=>{
     btn.addEventListener("click", async ()=>{
-        console.log("working");
         displayQuote();
-        console.log("working22");
     });
+}
+
+changeCategory = async(selected_category)=>{
+    console.log("changing category to:", selected_category);
+    current_category = selected_category;
+    genre.innerText = current_category;
 }
 
 
