@@ -3,12 +3,25 @@ let get_started_section = document.getElementById("get-started-section");
 let header = document.getElementById("header");
 let quote_section = document.getElementById("quote-section");
 let category_dropdown_btn = document.getElementById("category-dropdown-btn");
+let author = document.getElementById("author");
+let genre = document.getElementById("genre");
+let quote = document.getElementById("quote");
+let loading_screen = document.getElementById("loading-screen");
+
+console.log(author, genre, quote);
+
 const BASE_URL = "https://quote-garden.onrender.com";
+let category = "random";
 
 
 window.addEventListener("load", async ()=>{
     console.log("windows loaded");
     getStarted(get_started_btn);
+    // fetch and add items in the dropdown 
+    // getSelectedCategory(category_dropdown_btn); 
+    // let data =  await fetchData(BASE_URL+"/api/v3/quotes/"+category);
+    // console.log("DATA", data);
+    
     
 });
 
@@ -21,18 +34,38 @@ const fetchData = async (url)=>{
     return data;
 }
 
+const displayQuote = async ()=>{
+    
+    let data =  await fetchData(BASE_URL+"/api/v3/quotes/random");
+    
+ 
+    if(data.statusCode === 200){
+     hideElement(loading_screen);
+     console.log("displaying data")
+ 
+     data.data.forEach(ele => {
+          console.log(ele);
+          quote.innerText = ele.quoteText;
+          author.innerText = ele.quoteAuthor;
+          genre.innerText = ele.quoteGenre;
+     });
+
+     showElement(quote_section);
+    }
+ 
+   
+
+ }
+
 // Enable user to leave the welcome screen and get started 
 function getStarted(btn){
     btn.addEventListener("click", async ()=>{
         console.log(btn);
         hideElement(get_started_section);
         showElement(header);
-        showElement(quote_section);
-
-        // fetch and add items in the dropdown 
+        showElement(loading_screen);
         await displayDropDownItems(category_dropdown_btn);
-        getSelectedCategory(category_dropdown_btn);    
-
+        displayQuote();
 
     })
 }
@@ -68,8 +101,8 @@ getSelectedCategory = async (html_dropdown)=>{
 
     //loop and add event listener to each dropdown item
     for(let i = 0; i < drop_down_container.length; i++){
-        let dropdown_items = drop_down_container[i];
-        dropdown_items.addEventListener("click", (e)=>{
+        let all_dropdown_items = drop_down_container[i];
+        all_dropdown_items.addEventListener("click", (e)=>{
             let category_name = e.target.innerText;
             console.log(category_name);
             return category_name;
@@ -83,12 +116,9 @@ getSelectedCategory = async (html_dropdown)=>{
 
 
 
-// let random_quote = document.getElementById("random-quote");
 // let author_btn = document.getElementById("author-btn");
-// let author = document.getElementById("author");
-// let genre = document.getElementById("genre");
+
 // let next_btn = document.getElementById("next-btn");
-// let loading_screen = document.getElementById("loading-screen");
 // let author_quotes_section = document.getElementById("author-quotes-section");
 
 
@@ -108,26 +138,7 @@ getSelectedCategory = async (html_dropdown)=>{
 //     return data;
 // }
 
-// const displayRandomQuote = async ()=>{
-    
-//    let data =  await fetchData(BASE_URL+"/api/v3/quotes/random");
-   
 
-//    if(data.statusCode === 200){
-//     loading_screen.classList.add("d-none");
-//     quote_section.classList.remove("d-none");
-//     author_quotes_section.classList.add("d-none");
-//    }
-
-   
-
-//    data.data.forEach(ele => {
-//         console.log(ele);
-//         random_quote.innerText = ele.quoteText;
-//         author.innerText = ele.quoteAuthor;
-//         genre.innerText = ele.quoteGenre;
-//    });
-// }
 
 // const displayQuotesBaseOnAuthor = async ()=>{
 
