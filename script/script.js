@@ -1,6 +1,8 @@
 let get_started_btn = document.getElementById("get-started-btn");
 let get_started_section = document.getElementById("get-started-section");
 let header = document.getElementById("header");
+let quote_section = document.getElementById("quote-section");
+
 console.log(header);
 
 
@@ -15,6 +17,7 @@ function getStarted(btn){
         console.log(btn);
         hideElement(get_started_section);
         showElement(header);
+        showElement(quote_section);
     })
 }
 
@@ -36,7 +39,6 @@ function showElement(ele){
 // let genre = document.getElementById("genre");
 // let next_btn = document.getElementById("next-btn");
 // let loading_screen = document.getElementById("loading-screen");
-// let quote_section = document.getElementById("quote-section");
 // let author_quotes_section = document.getElementById("author-quotes-section");
 
 // const BASE_URL = "https://quote-garden.onrender.com";

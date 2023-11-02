@@ -16,12 +16,12 @@ header{
     font-size: 4em !important;
 }
 
-#author-btn{
+/* #author-btn{
     background-color: rgb(9, 9, 9);
     color: whitesmoke;
-}
+} */
 
 #author-btn:hover{
-    background-color: rgb(31, 31, 31);
-    color: whitesmoke;
+    background-color: #198754;
+    color: whitesmoke !important;
 }
