@@ -2,13 +2,16 @@ let get_started_btn = document.getElementById("get-started-btn");
 let get_started_section = document.getElementById("get-started-section");
 let header = document.getElementById("header");
 let quote_section = document.getElementById("quote-section");
-
-console.log(header);
+let category_dropdown_btn = document.getElementById("category-dropdown-btn");
+console.log(category_dropdown_btn);
+const BASE_URL = "https://quote-garden.onrender.com";
 
 
 window.addEventListener("load", async ()=>{
     console.log("windows loaded");
     getStarted(get_started_btn);
+    displayDropDownItems(category_dropdown_btn);
+    
     
 })
 
@@ -21,7 +24,6 @@ function getStarted(btn){
     })
 }
 
-
 // accepts an HTML element node and hide the specific element from the DOM 
 function hideElement(ele){
     ele.classList.add("d-none");
@@ -33,6 +35,21 @@ function showElement(ele){
     console.log(ele);
 }
 
+async function displayDropDownItems(html_dropdown){
+    let dropdown_items = await fetchData(BASE_URL+"/api/v3/genres");
+}
+
+const fetchData = async (url)=>{
+    let response = await fetch(url);
+    let data = await response.json();
+    console.log(data);
+    return data;
+}
+
+
+
+
+
 // let random_quote = document.getElementById("random-quote");
 // let author_btn = document.getElementById("author-btn");
 // let author = document.getElementById("author");
@@ -41,7 +58,6 @@ function showElement(ele){
 // let loading_screen = document.getElementById("loading-screen");
 // let author_quotes_section = document.getElementById("author-quotes-section");
 
-// const BASE_URL = "https://quote-garden.onrender.com";
 
 
 // window.addEventListener("load", async ()=>{
