@@ -7,6 +7,8 @@ let author = document.getElementById("author");
 let genre = document.getElementById("genre");
 let quote = document.getElementById("quote");
 let loading_screen = document.getElementById("loading-screen");
+let random_quote_btn = document.getElementById("random-quote-btn");
+console.log(random_quote_btn);
 
 console.log(author, genre, quote);
 
@@ -15,16 +17,9 @@ let category = "random";
 
 
 window.addEventListener("load", async ()=>{
-    console.log("windows loaded");
     getStarted(get_started_btn);
-    // fetch and add items in the dropdown 
-    // getSelectedCategory(category_dropdown_btn); 
-    // let data =  await fetchData(BASE_URL+"/api/v3/quotes/"+category);
-    // console.log("DATA", data);
-    
-    
+    generateRandom(random_quote_btn);
 });
-
 
 // get data from API 
 const fetchData = async (url)=>{
@@ -32,6 +27,19 @@ const fetchData = async (url)=>{
     let data = await response.json();
     console.log(data);
     return data;
+}
+
+// Enable user to leave the welcome screen and get started 
+function getStarted(btn){
+    btn.addEventListener("click", async ()=>{
+        console.log(btn);
+        hideElement(get_started_section);
+        showElement(header);
+        showElement(loading_screen);
+        await displayDropDownItems(category_dropdown_btn);
+        displayQuote();
+
+    })
 }
 
 const displayQuote = async ()=>{
@@ -47,28 +55,13 @@ const displayQuote = async ()=>{
           console.log(ele);
           quote.innerText = ele.quoteText;
           author.innerText = ele.quoteAuthor;
-          genre.innerText = ele.quoteGenre;
+          genre.innerText = category;
      });
 
      showElement(quote_section);
     }
  
-   
-
  }
-
-// Enable user to leave the welcome screen and get started 
-function getStarted(btn){
-    btn.addEventListener("click", async ()=>{
-        console.log(btn);
-        hideElement(get_started_section);
-        showElement(header);
-        showElement(loading_screen);
-        await displayDropDownItems(category_dropdown_btn);
-        displayQuote();
-
-    })
-}
 
 // accepts an HTML element node and hide the specific element from the DOM 
 function hideElement(ele){
@@ -110,6 +103,14 @@ getSelectedCategory = async (html_dropdown)=>{
     }
     
 
+}
+
+generateRandom = (btn)=>{
+    btn.addEventListener("click", async ()=>{
+        console.log("working");
+        displayQuote();
+        console.log("working22");
+    });
 }
 
 
