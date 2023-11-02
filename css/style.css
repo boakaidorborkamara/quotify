@@ -1,3 +1,8 @@
+body{
+    font-family: 'Caveat', cursive;
+}
+
+
 header{
     z-index: 100;
 }
@@ -6,6 +11,10 @@ header{
     color: white;
 } */
 
+
+#logo{
+    font-size: 4em !important;
+}
 
 #author-btn{
     background-color: rgb(9, 9, 9);
