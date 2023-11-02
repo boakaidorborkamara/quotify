@@ -8,7 +8,9 @@ let genre = document.getElementById("genre");
 let quote = document.getElementById("quote");
 let loading_screen = document.getElementById("loading-screen");
 let random_quote_btn = document.getElementById("random-quote-btn");
-console.log(random_quote_btn);
+let previous_btn = document.getElementById("previous-btn");
+let next_btn = document.getElementById("next-btn");
+
 
 console.log(author, genre, quote);
 
@@ -79,9 +81,11 @@ const displayQuote = async (category)=>{
             quote.innerText = first_quote.quoteText;
             author.innerText = first_quote.quoteAuthor;
             genre.innerText = current_category;
+
      }
     
 
+     controlButtonsDisplay();
      showElement(quote_section);
     }
  
@@ -139,10 +143,23 @@ generateRandomQuote = (btn)=>{
 }
 
 changeCategory = async(selected_category)=>{
-    console.log("changing category to:", selected_category);
     current_category = selected_category;
     genre.innerText = current_category;
     displayQuote(selected_category);
+}
+
+controlButtonsDisplay = async()=>{
+    console.log(random_quote_btn);
+    if(current_category !== "random"){
+        hideElement(random_quote_btn);
+        showElement(previous_btn);
+        showElement(next_btn);
+    }
+    else if(current_category === "random"){
+        showElement(random_quote_btn);
+        hideElement(previous_btn);
+        hideElement(next_btn);
+    }
 }
 
 
