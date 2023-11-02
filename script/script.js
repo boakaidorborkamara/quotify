@@ -37,27 +37,50 @@ function getStarted(btn){
         showElement(header);
         showElement(loading_screen);
         await displayDropDownItems(category_dropdown_btn);
-        displayQuote();
+        displayQuote(current_category);
         getSelectedCategory(category_dropdown_btn);
 
     })
 }
 
-const displayQuote = async ()=>{
+const displayQuote = async (category)=>{
+    // customize url based on selected category 
+    let url = "";
+    if(category === "random"){
+        url = BASE_URL+"/api/v3/quotes/"+category;
+    }
+    else{
+        url = BASE_URL+"/api/v3/quotes?genre="+category;
+        console.log("URL", url);
+        console.log("not random");
+    }
+
+    // get data from API using the customized url 
+    let quotes =  await fetchData(url);
+    let number_of_quotes = quotes.data.length;
+    console.log("number of quote", number_of_quotes);
     
-    let data =  await fetchData(BASE_URL+"/api/v3/quotes/random");
-    
- 
-    if(data.statusCode === 200){
+    if(quotes.statusCode === 200){
+     // stop showing loading screen when data from API arrive 
      hideElement(loading_screen);
-     console.log("displaying data")
  
-     data.data.forEach(ele => {
-          console.log(ele);
-          quote.innerText = ele.quoteText;
-          author.innerText = ele.quoteAuthor;
-          genre.innerText = current_category;
-     });
+    //  loop through and display quote if it's a random  quote 
+     if(current_category === "random" && number_of_quotes === 1){
+        quotes.data.forEach(ele => {
+            quote.innerText = ele.quoteText;
+            author.innerText = ele.quoteAuthor;
+            genre.innerText = current_category;
+       });
+     }
+     //  only display the first quote 
+     else if(current_category !== "random" && number_of_quotes >= 1){
+            let first_quote = quotes.data[0];
+            console.log(first_quote);
+            quote.innerText = first_quote.quoteText;
+            author.innerText = first_quote.quoteAuthor;
+            genre.innerText = current_category;
+     }
+    
 
      showElement(quote_section);
     }
@@ -111,7 +134,7 @@ getSelectedCategory = async (html_dropdown)=>{
 
 generateRandomQuote = (btn)=>{
     btn.addEventListener("click", async ()=>{
-        displayQuote();
+        displayQuote(current_category);
     });
 }
 
@@ -119,6 +142,7 @@ changeCategory = async(selected_category)=>{
     console.log("changing category to:", selected_category);
     current_category = selected_category;
     genre.innerText = current_category;
+    displayQuote(selected_category);
 }
 
 
