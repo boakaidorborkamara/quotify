@@ -16,6 +16,7 @@ console.log(author, genre, quote);
 
 const BASE_URL = "https://quote-garden.onrender.com";
 let current_category = "random";
+let counter = 0;
 
 
 window.addEventListener("load", async ()=>{
@@ -81,6 +82,7 @@ const displayQuote = async (category)=>{
             author.innerText = first_quote.quoteAuthor;
             genre.innerText = current_category;
             displayNextQuote(next_btn, quotes);
+            displayPreviousQuote(previous_btn, quotes);
      }
     
 
@@ -162,9 +164,22 @@ const controlButtonsDisplay = async()=>{
 
 const displayNextQuote = async(btn, all_quotes)=>{
     console.log("all q", all_quotes);
-    let counter = 0;
     btn.addEventListener("click", ()=>{
         counter+=1;
+        let next_quote = all_quotes.data[counter];
+        quote.innerText = next_quote.quoteText;
+        author.innerText = next_quote.quoteAuthor;
+        genre.innerText = current_category;
+            
+        
+    })
+}
+
+
+const displayPreviousQuote = async(btn, all_quotes)=>{
+    console.log("all q", all_quotes);
+    btn.addEventListener("click", ()=>{
+        counter-=1;
         let next_quote = all_quotes.data[counter];
         quote.innerText = next_quote.quoteText;
         author.innerText = next_quote.quoteAuthor;
