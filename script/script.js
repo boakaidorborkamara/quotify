@@ -37,8 +37,19 @@ function showElement(ele){
 }
 
 async function displayDropDownItems(html_dropdown){
-    let dropdown_items = await fetchData(BASE_URL+"/api/v3/genres");
-    console.log(typeof dropdown_items);
+
+    let drop_down_container = html_dropdown.children[1];
+    
+    let genres = await fetchData(BASE_URL+"/api/v3/genres");
+    console.log("genres", genres)
+    genres.data.forEach(ele => {
+        console.log(ele);
+        let drop_down_element = `
+        <a class="dropdown-item" href="#">${ele}</a>
+        `;
+        drop_down_container.insertAdjacentHTML("beforeend", drop_down_element);
+    });
+    // console.log("BTN", dropdown_items);
 }
 
 const fetchData = async (url)=>{
