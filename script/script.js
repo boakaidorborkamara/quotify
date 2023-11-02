@@ -15,6 +15,7 @@ window.addEventListener("load", async ()=>{
     
 })
 
+// Enable user to leave the welcome screen and get started 
 function getStarted(btn){
     btn.addEventListener("click", ()=>{
         console.log(btn);
@@ -37,6 +38,7 @@ function showElement(ele){
 
 async function displayDropDownItems(html_dropdown){
     let dropdown_items = await fetchData(BASE_URL+"/api/v3/genres");
+    console.log(typeof dropdown_items);
 }
 
 const fetchData = async (url)=>{
