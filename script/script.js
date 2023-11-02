@@ -34,7 +34,6 @@ const fetchData = async (url)=>{
 // Enable user to leave the welcome screen and get started 
 const getStarted = (btn)=>{
     btn.addEventListener("click", async ()=>{
-        console.log(btn);
         hideElement(get_started_section);
         showElement(header);
         showElement(loading_screen);
@@ -81,7 +80,7 @@ const displayQuote = async (category)=>{
             quote.innerText = first_quote.quoteText;
             author.innerText = first_quote.quoteAuthor;
             genre.innerText = current_category;
-
+            displayNextQuote(next_btn, quotes);
      }
     
 
@@ -161,8 +160,18 @@ const controlButtonsDisplay = async()=>{
     }
 }
 
-const displayNextQuote = async()=>{
-    console.log("Working")
+const displayNextQuote = async(btn, all_quotes)=>{
+    console.log("all q", all_quotes);
+    let counter = 0;
+    btn.addEventListener("click", ()=>{
+        counter+=1;
+        let next_quote = all_quotes.data[counter];
+        quote.innerText = next_quote.quoteText;
+        author.innerText = next_quote.quoteAuthor;
+        genre.innerText = current_category;
+            
+        
+    })
 }
 
 
