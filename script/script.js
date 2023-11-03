@@ -16,7 +16,7 @@ console.log(author, genre, quote);
 
 const BASE_URL = "https://quote-garden.onrender.com";
 let current_category = "random";
-let counter = 0;
+let quote_index = 0;
 
 
 window.addEventListener("load", async ()=>{
@@ -163,24 +163,35 @@ const controlButtonsDisplay = async()=>{
 }
 
 const displayNextQuote = async(btn, all_quotes)=>{
-    console.log("all q", all_quotes);
+    
+    let total_quote_amount = all_quotes.data.length;
+    // amount of undisplayed quotes 
+    let remaining_quote_amount = total_quote_amount-1;
+    console.log("NUM", total_quote_amount, remaining_quote_amount);
+    
     btn.addEventListener("click", ()=>{
-        counter+=1;
-        let next_quote = all_quotes.data[counter];
-        quote.innerText = next_quote.quoteText;
-        author.innerText = next_quote.quoteAuthor;
-        genre.innerText = current_category;
-            
+        remaining_quote_amount-=1;
+        console.log("undisplayed quote", remaining_quote_amount);
+        if(remaining_quote_amount < 1){
+            console.log("all quotes displayed");
+            next_btn.classList.add("disabled")
+            return
+        } 
         
-    })
+        quote_index+=1;
+            let next_quote = all_quotes.data[quote_index];
+            quote.innerText = next_quote.quoteText;
+            author.innerText = next_quote.quoteAuthor;
+            genre.innerText = current_category;
+        });
 }
 
 
 const displayPreviousQuote = async(btn, all_quotes)=>{
     console.log("all q", all_quotes);
     btn.addEventListener("click", ()=>{
-        counter-=1;
-        let next_quote = all_quotes.data[counter];
+        quote_index-=1;
+        let next_quote = all_quotes.data[quote_index];
         quote.innerText = next_quote.quoteText;
         author.innerText = next_quote.quoteAuthor;
         genre.innerText = current_category;
