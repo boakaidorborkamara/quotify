@@ -171,8 +171,7 @@ const displayNextQuote = async(btn, all_quotes)=>{
     
     btn.addEventListener("click", ()=>{
         remaining_quote_amount-=1;
-        console.log("undisplayed quote", remaining_quote_amount);
-        if(remaining_quote_amount < 1){
+        if(remaining_quote_amount <= -1){
             console.log("all quotes displayed");
             next_btn.classList.add("disabled")
             return
@@ -189,12 +188,22 @@ const displayNextQuote = async(btn, all_quotes)=>{
 
 const displayPreviousQuote = async(btn, all_quotes)=>{
     console.log("all q", all_quotes);
+    let total_quote_amount = all_quotes.data.length;
+    // amount of undisplayed quotes 
+    // let remaining_quote_amount = total_quote_amount-1;
+    // console.log("NUM", total_quote_amount, remaining_quote_amount);
+
+    if(quote_index < total_quote_amount){
+        console.log("no previous quote");
+    }
+
+
     btn.addEventListener("click", ()=>{
         quote_index-=1;
         let next_quote = all_quotes.data[quote_index];
-        quote.innerText = next_quote.quoteText;
-        author.innerText = next_quote.quoteAuthor;
-        genre.innerText = current_category;
+        // quote.innerText = next_quote.quoteText;
+        // author.innerText = next_quote.quoteAuthor;
+        // genre.innerText = current_category;
             
         
     })
