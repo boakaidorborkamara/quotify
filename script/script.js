@@ -17,6 +17,10 @@ console.log(author, genre, quote);
 const BASE_URL = "https://quote-garden.onrender.com";
 let current_category = "random";
 let quote_index = 0;
+let total_quote_per_category = 0;
+let amount_of_undisplayed_quotes = 0;
+// let amount_of_displayed_quotes = 0;
+
 
 
 window.addEventListener("load", async ()=>{
@@ -164,43 +168,54 @@ const controlButtonsDisplay = async()=>{
 
 const displayNextQuote = async(btn, all_quotes)=>{
     
-    let total_quote_amount = all_quotes.data.length;
-    // amount of undisplayed quotes 
-    let remaining_quote_amount = total_quote_amount-1;
-    console.log("NUM", total_quote_amount, remaining_quote_amount);
+    let total_quote_per_category = all_quotes.data.length;
+    amount_of_undisplayed_quotes = total_quote_per_category-1;
     
     btn.addEventListener("click", ()=>{
-        remaining_quote_amount-=1;
-        if(remaining_quote_amount <= -1){
+        amount_of_undisplayed_quotes--;
+        console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
+
+
+        quote_index+=1;
+        console.log("quote index", quote_index);
+        let next_quote = all_quotes.data[quote_index];
+        quote.innerText = next_quote.quoteText;
+        author.innerText = next_quote.quoteAuthor;
+        genre.innerText = current_category;
+
+
+        if(amount_of_undisplayed_quotes === 0){
             console.log("all quotes displayed");
-            next_btn.classList.add("disabled")
+            next_btn.classList.add("disabled");
             return
         } 
+
         
-        quote_index+=1;
-            let next_quote = all_quotes.data[quote_index];
-            quote.innerText = next_quote.quoteText;
-            author.innerText = next_quote.quoteAuthor;
-            genre.innerText = current_category;
-        });
+    });
+
 }
 
 
 const displayPreviousQuote = async(btn, all_quotes)=>{
     console.log("all q", all_quotes);
+    
+
     let total_quote_amount = all_quotes.data.length;
     // amount of undisplayed quotes 
     // let remaining_quote_amount = total_quote_amount-1;
     // console.log("NUM", total_quote_amount, remaining_quote_amount);
 
-    if(quote_index < total_quote_amount){
-        console.log("no previous quote");
-    }
+    // if(quote_index < total_quote_amount){
+    //     console.log("no previous quote");
+    // }
 
 
     btn.addEventListener("click", ()=>{
-        quote_index-=1;
-        let next_quote = all_quotes.data[quote_index];
+        console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
+
+        console.log("quotes index", quote_index);
+        // quote_index-=1;
+        // let next_quote = all_quotes.data[quote_index];
         // quote.innerText = next_quote.quoteText;
         // author.innerText = next_quote.quoteAuthor;
         // genre.innerText = current_category;
