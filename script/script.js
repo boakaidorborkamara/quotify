@@ -214,11 +214,20 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
         console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
 
         console.log("quotes index", quote_index);
-        // quote_index-=1;
-        // let next_quote = all_quotes.data[quote_index];
-        // quote.innerText = next_quote.quoteText;
-        // author.innerText = next_quote.quoteAuthor;
-        // genre.innerText = current_category;
+        quote_index--;
+        let previous_quote = all_quotes.data[quote_index];
+        console.log("previous", previous_quote);
+        quote.innerText = previous_quote.quoteText;
+        author.innerText = previous_quote.quoteAuthor;
+        genre.innerText = current_category;
+
+
+        if(amount_of_undisplayed_quotes === 10){
+            console.log("all quotes displayed");
+            previous_btn.classList.add("disabled");
+            return
+        } 
+
             
         
     })
