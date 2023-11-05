@@ -188,6 +188,11 @@ const displayNextQuote = async(btn, all_quotes)=>{
             console.log("all quotes displayed");
             next_btn.classList.add("disabled");
             return
+        }
+        else if(amount_of_undisplayed_quotes > 1){
+            console.log("available");
+            previous_btn.classList.remove("disabled");
+            return
         } 
 
         
@@ -222,11 +227,11 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
         genre.innerText = current_category;
 
 
-        if(amount_of_undisplayed_quotes === 10){
-            console.log("all quotes displayed");
-            previous_btn.classList.add("disabled");
-            return
-        } 
+        // if(amount_of_undisplayed_quotes === 10){
+        //     console.log("all quotes displayed");
+        //     previous_btn.classList.add("disabled");
+        //     return
+        // } 
 
             
         
