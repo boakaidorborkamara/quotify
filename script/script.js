@@ -32,7 +32,6 @@ window.addEventListener("load", async ()=>{
 const fetchData = async (url)=>{
     let response = await fetch(url);
     let data = await response.json();
-    console.log(data);
     return data;
 }
 
@@ -57,14 +56,12 @@ const displayQuote = async (category)=>{
     }
     else{
         url = BASE_URL+"/api/v3/quotes?genre="+category;
-        console.log("URL", url);
-        console.log("not random");
     }
 
     // get data from API using the customized url 
     let quotes =  await fetchData(url);
     let number_of_quotes = quotes.data.length;
-    console.log("number of quote", number_of_quotes);
+    // console.log("number of quote", number_of_quotes);
     
     if(quotes.statusCode === 200){
      // stop showing loading screen when data from API arrive 
@@ -80,6 +77,8 @@ const displayQuote = async (category)=>{
      }
      //  only display the first quote 
      else if(current_category !== "random" && number_of_quotes >= 1){
+            console.log("first non random quote", quotes.data[0]);
+            console.log("index", 0);
             let first_quote = quotes.data[0];
             console.log(first_quote);
             quote.innerText = first_quote.quoteText;
@@ -104,7 +103,6 @@ const hideElement = async (ele)=>{
 // accepts an HTML hidden element node and display the specific element from the DOM 
 const showElement = async (ele)=>{
     ele.classList.remove("d-none");
-    console.log(ele);
 }
 
 // fetch quote genres and display them in the dropdown element 
@@ -218,8 +216,11 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
     btn.addEventListener("click", ()=>{
         console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
 
-        console.log("quotes index", quote_index);
+        
         quote_index--;
+        amount_of_undisplayed_quotes++
+        console.log("quotes index", quote_index);
+        console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
         let previous_quote = all_quotes.data[quote_index];
         console.log("previous", previous_quote);
         quote.innerText = previous_quote.quoteText;
@@ -230,6 +231,17 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
         // if(amount_of_undisplayed_quotes === 10){
         //     console.log("all quotes displayed");
         //     previous_btn.classList.add("disabled");
+        //     return
+        // } 
+
+        // if(quote_index === 0){
+        //     console.log("available");
+        //     previous_btn.classList.add("disabled");
+        //     return
+        // }
+        // else if(quote_index === 1){
+        //     console.log("available");
+        //     next_btn.classList.remove("disabled");
         //     return
         // } 
 
