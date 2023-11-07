@@ -219,6 +219,12 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
         
         quote_index--;
         amount_of_undisplayed_quotes++
+
+        if(quote_index === 0){
+            previous_btn.classList.add("disabled");
+        }
+
+
         console.log("quotes index", quote_index);
         console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
         let previous_quote = all_quotes.data[quote_index];
