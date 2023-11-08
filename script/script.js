@@ -171,26 +171,19 @@ const displayNextQuote = async(btn, all_quotes)=>{
     
     btn.addEventListener("click", ()=>{
         amount_of_undisplayed_quotes--;
-        console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
 
-
-        quote_index+=1;
-        console.log("quote index", quote_index);
+        quote_index++;
+        
         let next_quote = all_quotes.data[quote_index];
         quote.innerText = next_quote.quoteText;
         author.innerText = next_quote.quoteAuthor;
         genre.innerText = current_category;
 
-
         if(amount_of_undisplayed_quotes === 0){
-            console.log("all quotes displayed");
             next_btn.classList.add("disabled");
-            return
         }
         else if(amount_of_undisplayed_quotes > 1){
-            console.log("available");
             previous_btn.classList.remove("disabled");
-            return
         } 
 
         
@@ -200,62 +193,29 @@ const displayNextQuote = async(btn, all_quotes)=>{
 
 
 const displayPreviousQuote = async(btn, all_quotes)=>{
-    console.log("all q", all_quotes);
-    
-
-    let total_quote_amount = all_quotes.data.length;
-    // amount of undisplayed quotes 
-    // let remaining_quote_amount = total_quote_amount-1;
-    // console.log("NUM", total_quote_amount, remaining_quote_amount);
-
-    // if(quote_index < total_quote_amount){
-    //     console.log("no previous quote");
-    // }
-
-
     btn.addEventListener("click", ()=>{
-        console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
-
         
+        // modify quote index to be previous quote 
         quote_index--;
         amount_of_undisplayed_quotes++
 
-        if(quote_index === 0){
-            previous_btn.classList.add("disabled");
-        }
-        else if(amount_of_undisplayed_quotes > 0){
-            next_btn.classList.remove("disabled");
-        }
-
-
-        console.log("quotes index", quote_index);
-        console.log("amount of undisplayed quotes", amount_of_undisplayed_quotes);
+        //display previous quote based on modified index
         let previous_quote = all_quotes.data[quote_index];
-        console.log("previous", previous_quote);
         quote.innerText = previous_quote.quoteText;
         author.innerText = previous_quote.quoteAuthor;
         genre.innerText = current_category;
 
 
-        // if(amount_of_undisplayed_quotes === 10){
-        //     console.log("all quotes displayed");
-        //     previous_btn.classList.add("disabled");
-        //     return
-        // } 
+        if(quote_index === 0){
+            // disable previous button when there's no more previous quote
+            previous_btn.classList.add("disabled");
+        }
+        else if(amount_of_undisplayed_quotes > 0){
+            // disable next button when there's no more quote to display next
+            next_btn.classList.remove("disabled");
+        }
 
-        // if(quote_index === 0){
-        //     console.log("available");
-        //     previous_btn.classList.add("disabled");
-        //     return
-        // }
-        // else if(quote_index === 1){
-        //     console.log("available");
-        //     next_btn.classList.remove("disabled");
-        //     return
-        // } 
 
-            
-        
     })
 }
 
