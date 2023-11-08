@@ -282,7 +282,7 @@ const displayQuotesBaseOnAuthor = async ()=>{
         let html_element_for_author_quotes = ` 
     
         <!-- list of all author quotes  -->
-        <div class="border-start border-5 border-success mb-5 mx-4 shadow-sm">
+        <div class="border-start border-5 border-success py-4 mb-5 mx-4 shadow-sm">
             <p class="ps-4">"${ele.quoteText}"
             </p>
         </div>`;
