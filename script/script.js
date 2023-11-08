@@ -266,7 +266,7 @@ const displayQuotesBaseOnAuthor = async ()=>{
     
     // set author name in the HTML element 
     let html_element_for_author_name = ` <!-- author name  -->
-    <div class=" d-flex justify-content-between align-items-center  p-4 btn" >
+    <div class=" d-flex justify-content-center align-items-center mt-2 p-4 btn" >
         <div>
             <h3 class="m-0 fw-bold"><span class="text-muted">Quotes by: </span>${author_name}</h3>
         </div>
@@ -282,7 +282,7 @@ const displayQuotesBaseOnAuthor = async ()=>{
         let html_element_for_author_quotes = ` 
     
         <!-- list of all author quotes  -->
-        <div class="border-start border-5 border-success mb-5">
+        <div class="border-start border-5 border-success mb-5 mx-4 shadow-sm">
             <p class="ps-4">"${ele.quoteText}"
             </p>
         </div>`;
