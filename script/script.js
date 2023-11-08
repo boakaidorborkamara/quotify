@@ -143,13 +143,9 @@ const getSelectedCategory = async (html_dropdown)=>{
         let all_dropdown_items = drop_down_container[i];
         all_dropdown_items.addEventListener("click", (e)=>{
             let category_name = e.target.innerText;
-            console.log(category_name);
             changeCategory(category_name);
-            // return category_name;
         })
     }
-    
-
 }
 
 
@@ -163,6 +159,7 @@ const generateRandomQuote = (btn)=>{
 const changeCategory = async(selected_category)=>{
     current_category = selected_category;
     genre.innerText = current_category;
+    hideElement(author_quotes_section)
     displayQuote(selected_category);
 }
 
@@ -239,7 +236,6 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
 
     })
 }
-
 
 
 const displayQuotesBaseOnAuthor = async ()=>{
