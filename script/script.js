@@ -10,23 +10,30 @@ let loading_screen = document.getElementById("loading-screen");
 let random_quote_btn = document.getElementById("random-quote-btn");
 let previous_btn = document.getElementById("previous-btn");
 let next_btn = document.getElementById("next-btn");
+let author_quotes_section = document.getElementById("author-quotes-section");
+let btn_arrow = document.getElementById("btn-arrow");
+console.log(btn_arrow);
 
-
-console.log(author, genre, quote);
 
 const BASE_URL = "https://quote-garden.onrender.com";
 let current_category = "random";
 let quote_index = 0;
 let total_quote_per_category = 0;
 let amount_of_undisplayed_quotes = 0;
-// let amount_of_displayed_quotes = 0;
 
 
+
+///////////////////////////////////////////////////////////////////////////////////
 
 window.addEventListener("load", async ()=>{
     getStarted(get_started_btn);
     generateRandomQuote(random_quote_btn);
+    btn_arrow.addEventListener("click", displayQuotesBaseOnAuthor)
 });
+
+///////////////////////////////////////////////////////////////////////////////////
+
+
 
 // get data from API 
 const fetchData = async (url)=>{
@@ -34,6 +41,7 @@ const fetchData = async (url)=>{
     let data = await response.json();
     return data;
 }
+
 
 // Enable user to leave the welcome screen and get started 
 const getStarted = (btn)=>{
@@ -47,6 +55,7 @@ const getStarted = (btn)=>{
 
     })
 }
+
 
 const displayQuote = async (category)=>{
     // customize url based on selected category 
@@ -95,15 +104,18 @@ const displayQuote = async (category)=>{
  
  }
 
+
 // accepts an HTML element node and hide the specific element from the DOM 
 const hideElement = async (ele)=>{
     ele.classList.add("d-none");
 }
 
+
 // accepts an HTML hidden element node and display the specific element from the DOM 
 const showElement = async (ele)=>{
     ele.classList.remove("d-none");
 }
+
 
 // fetch quote genres and display them in the dropdown element 
 const displayDropDownItems = async (html_dropdown)=>{
@@ -119,6 +131,7 @@ const displayDropDownItems = async (html_dropdown)=>{
     });
 
 }
+
 
 //get 
 const getSelectedCategory = async (html_dropdown)=>{
@@ -139,17 +152,20 @@ const getSelectedCategory = async (html_dropdown)=>{
 
 }
 
+
 const generateRandomQuote = (btn)=>{
     btn.addEventListener("click", async ()=>{
         displayQuote(current_category);
     });
 }
 
+
 const changeCategory = async(selected_category)=>{
     current_category = selected_category;
     genre.innerText = current_category;
     displayQuote(selected_category);
 }
+
 
 const controlButtonsDisplay = async()=>{
     if(current_category !== "random"){
@@ -164,25 +180,30 @@ const controlButtonsDisplay = async()=>{
     }
 }
 
+
 const displayNextQuote = async(btn, all_quotes)=>{
     
     let total_quote_per_category = all_quotes.data.length;
     amount_of_undisplayed_quotes = total_quote_per_category-1;
     
     btn.addEventListener("click", ()=>{
+        // modify quote index to be nex quote
+        quote_index++; 
         amount_of_undisplayed_quotes--;
-
-        quote_index++;
         
+
+        //display next quote based on modified index
         let next_quote = all_quotes.data[quote_index];
         quote.innerText = next_quote.quoteText;
         author.innerText = next_quote.quoteAuthor;
         genre.innerText = current_category;
 
         if(amount_of_undisplayed_quotes === 0){
+            // disable next button when there's no more quote to display next
             next_btn.classList.add("disabled");
         }
         else if(amount_of_undisplayed_quotes > 1){
+            // disable previous button when there's no more previous quote to display 
             previous_btn.classList.remove("disabled");
         } 
 
@@ -221,78 +242,59 @@ const displayPreviousQuote = async(btn, all_quotes)=>{
 
 
 
+const displayQuotesBaseOnAuthor = async ()=>{
 
+    console.log("working");
+    // reset the content of author quotes section to nothing 
+    author_quotes_section.innerHTML = "";
 
-// let author_btn = document.getElementById("author-btn");
-
-// let next_btn = document.getElementById("next-btn");
-// let author_quotes_section = document.getElementById("author-quotes-section");
-
-
-
-// window.addEventListener("load", async ()=>{
-//     console.log("windows loaded");
-//     displayRandomQuote();
-//     next_btn.addEventListener("click", displayRandomQuote);
-//     author_btn.addEventListener("click", displayQuotesBaseOnAuthor)
-// })
-
-
-// const fetchData = async (url)=>{
-//     let response = await fetch(url);
-//     let data = await response.json();
-//     console.log(data);
-//     return data;
-// }
-
-
-
-// const displayQuotesBaseOnAuthor = async ()=>{
-
-//     author_quotes_section.innerHTML = "";
-//     console.log("autorid")
-//     let author_name = author.innerText;
-//     console.log(author_name)
-    
-//     let data =  await fetchData(BASE_URL+"/api/v3/quotes?author="+author_name);
-
-//     loading_screen.classList.remove("d-none");
-//     quote_section.classList.add("d-none");
-//     if(data){
-//         loading_screen.classList.add("d-none");
-//         author_quotes_section.classList.remove("d-none");
-//     }
-//     console.log("DATAss", data);
-
+    // extract name of the current author 
+    let author_name = author.innerText; 
     
 
-//     let html_element_for_author_name = ` <!-- author name  -->
-//     <div class=" d-flex justify-content-between align-items-center  p-4 btn" >
-//         <div>
-//             <h3 class="m-0 fw-bold"><span class="text-muted">Quotes by: </span>${author_name}</h3>
-//         </div>
-//     </div>
-//     `;
-
-//     author_quotes_section.insertAdjacentHTML("afterbegin", html_element_for_author_name)
+    // display a loading screen as data loads 
+    loading_screen.classList.remove("d-none");
+    quote_section.classList.add("d-none");
 
 
+    // get all quotes from current author 
+    let data =  await fetchData(BASE_URL+"/api/v3/quotes?author="+author_name);
+    console.log(data);
 
-
-//     data.data.forEach((ele)=>{
-//         console.log(ele);
-//         let html_element_for_author_quotes = ` 
     
-//         <!-- list of all author quotes  -->
-//         <div class="border-start border-5 border-success mb-5">
-//             <p class="ps-4">"${ele.quoteText}"
-//             </p>
-//         </div>`;
+    // stop displaying data when the data returns 
+    if(data){
+        loading_screen.classList.add("d-none");
+        author_quotes_section.classList.remove("d-none");
+    }
+    
+    // set author name in the HTML element 
+    let html_element_for_author_name = ` <!-- author name  -->
+    <div class=" d-flex justify-content-between align-items-center  p-4 btn" >
+        <div>
+            <h3 class="m-0 fw-bold"><span class="text-muted">Quotes by: </span>${author_name}</h3>
+        </div>
+    </div>
+    `;
 
-//         author_quotes_section.insertAdjacentHTML("beforeend", html_element_for_author_quotes)
+    // display author's name to the DOM 
+    author_quotes_section.insertAdjacentHTML("afterbegin", html_element_for_author_name);
 
-//     })
-// }
+    // display each quote from current author 
+    data.data.forEach((ele)=>{
+        console.log(ele);
+        let html_element_for_author_quotes = ` 
+    
+        <!-- list of all author quotes  -->
+        <div class="border-start border-5 border-success mb-5">
+            <p class="ps-4">"${ele.quoteText}"
+            </p>
+        </div>`;
+
+        author_quotes_section.insertAdjacentHTML("beforeend", html_element_for_author_quotes)
+
+    });
+}
 
 
 
