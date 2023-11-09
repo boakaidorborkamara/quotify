@@ -12,7 +12,8 @@ let previous_btn = document.getElementById("previous-btn");
 let next_btn = document.getElementById("next-btn");
 let author_quotes_section = document.getElementById("author-quotes-section");
 let btn_arrow = document.getElementById("btn-arrow");
-console.log(btn_arrow);
+let copy_btn = document.getElementById("copy-btn");
+console.log(copy_btn);
 
 
 const BASE_URL = "https://quote-garden.onrender.com";
@@ -28,7 +29,8 @@ let amount_of_undisplayed_quotes = 0;
 window.addEventListener("load", async ()=>{
     getStarted(get_started_btn);
     generateRandomQuote(random_quote_btn);
-    btn_arrow.addEventListener("click", displayQuotesBaseOnAuthor)
+    btn_arrow.addEventListener("click", displayQuotesBaseOnAuthor);
+    copy_btn.addEventListener("click", copyText);
 });
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -290,6 +292,18 @@ const displayQuotesBaseOnAuthor = async ()=>{
         author_quotes_section.insertAdjacentHTML("beforeend", html_element_for_author_quotes)
 
     });
+}
+
+
+const copyText = async()=>{
+    // extract quote and author text from DOM element
+    let quote_details = `${quote.innerText} ${author.innerText}`;
+
+    //add to the clip board using writeText (copy text)
+    if(navigator.clipboard){
+        let result = await navigator.clipboard.writeText(quote_details);
+        alert("Quote Copied!")
+    }
 }
 
 
