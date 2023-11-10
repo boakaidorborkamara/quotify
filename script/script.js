@@ -13,7 +13,7 @@ let next_btn = document.getElementById("next-btn");
 let author_quotes_section = document.getElementById("author-quotes-section");
 let btn_arrow = document.getElementById("btn-arrow");
 let copy_btn = document.getElementById("copy-btn");
-console.log(copy_btn);
+console.log(category_dropdown_btn);
 
 
 const BASE_URL = "https://quote-garden.onrender.com";
@@ -21,6 +21,7 @@ let current_category = "random";
 let quote_index = 0;
 let total_quote_per_category = 0;
 let amount_of_undisplayed_quotes = 0;
+let quotes = null;
 
 
 
@@ -31,6 +32,7 @@ window.addEventListener("load", async ()=>{
     generateRandomQuote(random_quote_btn);
     btn_arrow.addEventListener("click", displayQuotesBaseOnAuthor);
     copy_btn.addEventListener("click", copyText);
+  
 });
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -41,6 +43,7 @@ window.addEventListener("load", async ()=>{
 const fetchData = async (url)=>{
     let response = await fetch(url);
     let data = await response.json();
+    
     return data;
 }
 
@@ -60,6 +63,7 @@ const getStarted = (btn)=>{
 
 
 const displayQuote = async (category)=>{
+    console.log("display quote fnx running")
     // customize url based on selected category 
     let url = "";
     if(category === "random"){
@@ -70,8 +74,12 @@ const displayQuote = async (category)=>{
     }
 
     // get data from API using the customized url 
-    let quotes =  await fetchData(url);
+    quotes =  await fetchData(url);
     let number_of_quotes = quotes.data.length;
+
+   
+    // displayNextQuote(next_btn, quotes);
+    // displayPreviousQuote(previous_btn, quotes);
     // console.log("number of quote", number_of_quotes);
     
     if(quotes.statusCode === 200){
@@ -88,15 +96,13 @@ const displayQuote = async (category)=>{
      }
      //  only display the first quote 
      else if(current_category !== "random" && number_of_quotes >= 1){
-            console.log("first non random quote", quotes.data[0]);
-            console.log("index", 0);
-            let first_quote = quotes.data[0];
-            console.log(first_quote);
+            console.log(quotes);
+            let first_quote = quotes.data[quote_index];
             quote.innerText = first_quote.quoteText;
             author.innerText = first_quote.quoteAuthor;
             genre.innerText = current_category;
-            displayNextQuote(next_btn, quotes);
-            displayPreviousQuote(previous_btn, quotes);
+
+           
      }
     
 
@@ -122,32 +128,51 @@ const showElement = async (ele)=>{
 // fetch quote genres and display them in the dropdown element 
 const displayDropDownItems = async (html_dropdown)=>{
     // HTML div containing dropdown items 
-    let drop_down_container = html_dropdown.children[1];
-    let genres = await fetchData(BASE_URL+"/api/v3/genres");
+    let drop_down_container = html_dropdown;
+    
     // dynamicly add dropdown items to dropdown container in the DOM 
+    let genres = await fetchData(BASE_URL+"/api/v3/genres");
     genres.data.forEach(ele => {
         let drop_down_element = `
         <a class="dropdown-item" href="#">${ele}</a>
         `;
+
         drop_down_container.insertAdjacentHTML("beforeend", drop_down_element);
     });
+
+    
 
 }
 
 
 //get 
 const getSelectedCategory = async (html_dropdown)=>{
-    // HTML div containing dropdown items 
-    let drop_down_container = await html_dropdown.children[1].children;
-
-    //loop and add event listener to each dropdown item
-    for(let i = 0; i < drop_down_container.length; i++){
-        let all_dropdown_items = drop_down_container[i];
-        all_dropdown_items.addEventListener("click", (e)=>{
-            let category_name = e.target.innerText;
+    let dropdown_items = document.querySelectorAll(".dropdown-item");
+    let category_name = null;
+    
+    dropdown_items.forEach(ele=>{
+        ele.addEventListener("click", (e)=>{
+            category_name = e.target.innerText;            
             changeCategory(category_name);
         })
+        
+    });
+
+    if(category_name === "random"){
+        url = BASE_URL+"/api/v3/quotes/"+category_name;
     }
+    else{
+        url = BASE_URL+"/api/v3/quotes?genre="+category_name;
+    }
+
+    // get data from API using the customized url 
+    let data =  await fetchData(url);
+
+
+    next_btn.addEventListener("click", ()=>{
+        displayNextQuote(data);});
+    // displayPreviousQuote(previous_btn, quotes);
+
 }
 
 
@@ -180,15 +205,23 @@ const controlButtonsDisplay = async()=>{
 }
 
 
-const displayNextQuote = async(btn, all_quotes)=>{
+const displayNextQuote = async(all_quotes)=>{
+    console.log(all_quotes);
     
-    let total_quote_per_category = all_quotes.data.length;
-    amount_of_undisplayed_quotes = total_quote_per_category-1;
     
-    btn.addEventListener("click", ()=>{
-        // modify quote index to be nex quote
-        quote_index++; 
-        amount_of_undisplayed_quotes--;
+    if(all_quotes !== null){
+        let total_quote_per_category = all_quotes.data.length;
+         amount_of_undisplayed_quotes = total_quote_per_category-1;
+    }
+
+    
+        console.log("display next fnx");
+       
+        // modify quote index to be next quote
+        // quote_index++; 
+        // amount_of_undisplayed_quotes--;
+
+        console.log({"quote index": quote_index, "amount of undisplayed quote": amount_of_undisplayed_quotes});
         
 
         //display next quote based on modified index
@@ -207,7 +240,7 @@ const displayNextQuote = async(btn, all_quotes)=>{
         } 
 
         
-    });
+    
 
 }
 
@@ -304,6 +337,36 @@ const copyText = async()=>{
         let result = await navigator.clipboard.writeText(quote_details);
         alert("Quote Copied!")
     }
+}
+
+const resetQuote = ()=>{
+    return
+    console.log("reset");
+    quote_index = 0;
+    total_quote_per_category = 0;
+    amount_of_undisplayed_quotes = 0;
+    console.log("reset", {"quote index": quote_index, "undisplayed quote": amount_of_undisplayed_quotes, "total quote per category":total_quote_per_category});
+
+    // if(quote_index === 0){
+    //     previous_btn.classList.add("disabled");
+    // }
+    // next_btn.classList.add("disabled");
+
+    // console.log("quote index", quote_index);
+    // console.log("undisplayed", amount_of_undisplayed_quotes);
+
+    // if(amount_of_undisplayed_quotes === 0){
+    //     console.log("no displayed quote");
+    //     previous_btn.classList.add("disabled");
+    //     // disable next button when there's no more quote to display next
+    //     // next_btn.classList.add("disabled");
+    // }
+    // else if(amount_of_undisplayed_quotes > 1){
+    //     // disable previous button when there's no more previous quote to display 
+    //     previous_btn.classList.remove("disabled");
+    // } 
+
+    
 }
 
 
