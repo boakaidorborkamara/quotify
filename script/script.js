@@ -21,9 +21,7 @@ let all_quotes = [];
 
 // EVENT LISTENERS///////////////////////////////////////////////////
 document.addEventListener("click", async (e)=>{
-    console.log(e.target);
     let clickedElement = e.target;
-    console.log(clickedElement.id)
 
     if(clickedElement.id === "get-started-btn"){
         startApp();
@@ -38,7 +36,6 @@ document.addEventListener("click", async (e)=>{
     if(clickedElement.classList.contains("dropdown-item")){
         let selected_category = clickedElement.innerText;
         all_quotes = await displayQuotesBaseOnCategory(selected_category);
-        console.log("ddd", all_quotes);
     }
 
     if(clickedElement.id === "next-btn"){
