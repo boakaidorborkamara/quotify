@@ -16,6 +16,7 @@ let author_quotes_section = document.getElementById("author-quotes-section");
 
 //GLOBAL VARIABLES/////////////////////////////////////////////////////
 let quote_index = 0;
+let selected_category = "random";
 let all_quotes = [];
 
 
@@ -34,16 +35,16 @@ document.addEventListener("click", async (e)=>{
     }
 
     if(clickedElement.classList.contains("dropdown-item")){
-        let selected_category = clickedElement.innerText;
+        selected_category = clickedElement.innerText;
         all_quotes = await displayQuotesBaseOnCategory(selected_category);
     }
 
     if(clickedElement.id === "next-btn"){
-       displayNextQuote(all_quotes);
+       displayNextQuote(all_quotes, selected_category);
     }
 
     if(clickedElement.id === "previous-btn"){
-        displayPreviousNextQuote(all_quotes);
+        displayPreviousNextQuote(all_quotes, selected_category);
     }
 
     if(clickedElement.id === "copy-btn"){
@@ -164,7 +165,7 @@ const controlButtonsDisplay = async(category)=>{
 const displayNextQuote = async(quotes, category)=>{
     // increase quote_index
     quote_index++
-    renderQuotesToDOM(quotes, quote_index)
+    renderQuotesToDOM(quotes, quote_index, category)
 
     let last_index = quotes.data.length-1;
     if(quote_index > 0){
@@ -182,7 +183,7 @@ const displayPreviousNextQuote = async(quotes, category)=>{
     // increase quote_index
     quote_index--
     console.log("ii", quote_index)
-    renderQuotesToDOM(quotes, quote_index)
+    renderQuotesToDOM(quotes, quote_index, category);
 
     let last_index = quotes.data.length-1;
     if(quote_index === 0){
