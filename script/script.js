@@ -1,277 +1,202 @@
-let get_started_btn = document.getElementById("get-started-btn");
+// DOM ELEMENTS/////////////////////////////////////////////////////////////
 let get_started_section = document.getElementById("get-started-section");
 let header = document.getElementById("header");
 let quote_section = document.getElementById("quote-section");
 let category_dropdown_btn = document.getElementById("category-dropdown-btn");
 let author = document.getElementById("author");
-let genre = document.getElementById("genre");
+let category = document.getElementById("genre");
 let quote = document.getElementById("quote");
+let quote_ele = document.getElementById("quote-ele");
 let loading_screen = document.getElementById("loading-screen");
 let random_quote_btn = document.getElementById("random-quote-btn");
 let previous_btn = document.getElementById("previous-btn");
 let next_btn = document.getElementById("next-btn");
 let author_quotes_section = document.getElementById("author-quotes-section");
-let btn_arrow = document.getElementById("btn-arrow");
-let copy_btn = document.getElementById("copy-btn");
-console.log(category_dropdown_btn);
 
 
-const BASE_URL = "https://quote-garden.onrender.com";
-let current_category = "random";
+//GLOBAL VARIABLES/////////////////////////////////////////////////////
 let quote_index = 0;
-let total_quote_per_category = 0;
-let amount_of_undisplayed_quotes = 0;
-let quotes = null;
+let all_quotes = [];
+
+
+// EVENT LISTENERS///////////////////////////////////////////////////
+document.addEventListener("click", async (e)=>{
+    console.log(e.target);
+    let clickedElement = e.target;
+    console.log(clickedElement.id)
+
+    if(clickedElement.id === "get-started-btn"){
+        startApp();
+        return;
+    }
+
+    if(clickedElement.id === "random-quote-btn"){
+        displayNextRandomQuote();
+        return;
+    }
+
+    if(clickedElement.classList.contains("dropdown-item")){
+        let selected_category = clickedElement.innerText;
+        all_quotes = await displayQuotesBaseOnCategory(selected_category);
+        console.log("ddd", all_quotes);
+    }
+
+    if(clickedElement.id === "next-btn"){
+       displayNextQuote(all_quotes);
+    }
+
+    if(clickedElement.id === "previous-btn"){
+        displayPreviousNextQuote(all_quotes);
+    }
+
+    if(clickedElement.id === "copy-btn"){
+        copyQuote();
+    }
+
+    if(clickedElement.id === "btn-arrow"){
+        displayQuotesBaseOnAuthor();
+    }
+})
 
 
 
-///////////////////////////////////////////////////////////////////////////////////
+//FUNCTIONS/////////////////////////////////////////////////////////
+const startApp = async ()=>{
+    hideElement(get_started_section);
+    showElement(header);
+    let random_quotes = await fetchData("https://quote-garden.onrender.com/api/v3/quotes/random");
+    renderQuotesToDOM(random_quotes, quote_index, "random");
+    displayDropDownItems();
+}
 
-window.addEventListener("load", async ()=>{
-    getStarted(get_started_btn);
-    generateRandomQuote(random_quote_btn);
-    btn_arrow.addEventListener("click", displayQuotesBaseOnAuthor);
-    copy_btn.addEventListener("click", copyText);
-  
-});
-
-///////////////////////////////////////////////////////////////////////////////////
-
-
-
-// get data from API 
+// Get quotes from API 
 const fetchData = async (url)=>{
-    let response = await fetch(url);
-    let data = await response.json();
-    
-    return data;
+
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    }
+    catch(err){
+        if(err){
+            console.log(err);
+        }
+    } 
 }
 
-
-// Enable user to leave the welcome screen and get started 
-const getStarted = (btn)=>{
-    btn.addEventListener("click", async ()=>{
-        hideElement(get_started_section);
-        showElement(header);
+// displays quotes to dom 
+const renderQuotesToDOM = async (quotes, index, category_name)=>{
+    // showElement(loading_screen);
+    console.log("p", quotes)
+    
+    hideElement(author_quotes_section);
+    if(quote_section.classList.contains("d-flex")){
         showElement(loading_screen);
-        await displayDropDownItems(category_dropdown_btn);
-        displayQuote(current_category);
-        getSelectedCategory(category_dropdown_btn);
-
-    })
-}
-
-
-const displayQuote = async (category)=>{
-    console.log("display quote fnx running")
-    // customize url based on selected category 
-    let url = "";
-    if(category === "random"){
-        url = BASE_URL+"/api/v3/quotes/"+category;
-    }
-    else{
-        url = BASE_URL+"/api/v3/quotes?genre="+category;
+        hideElement(quote_section);
     }
 
-    // get data from API using the customized url 
-    quotes =  await fetchData(url);
-    let number_of_quotes = quotes.data.length;
-
-   
-    // displayNextQuote(next_btn, quotes);
-    // displayPreviousQuote(previous_btn, quotes);
-    // console.log("number of quote", number_of_quotes);
-    
-    if(quotes.statusCode === 200){
-     // stop showing loading screen when data from API arrive 
-     hideElement(loading_screen);
- 
-    //  loop through and display quote if it's a random  quote 
-     if(current_category === "random" && number_of_quotes === 1){
-        quotes.data.forEach(ele => {
-            quote.innerText = ele.quoteText;
-            author.innerText = ele.quoteAuthor;
-            genre.innerText = current_category;
-       });
-     }
-     //  only display the first quote 
-     else if(current_category !== "random" && number_of_quotes >= 1){
-            console.log(quotes);
-            let first_quote = quotes.data[quote_index];
-            quote.innerText = first_quote.quoteText;
-            author.innerText = first_quote.quoteAuthor;
-            genre.innerText = current_category;
-
-           
-     }
-    
-
-     controlButtonsDisplay();
-     showElement(quote_section);
+    if(quotes){
+        let quote = quotes.data[index];
+        quote_ele.innerText = quote.quoteText;
+        author.innerText = quote.quoteAuthor;
+        category.innerText = category_name;
+        hideElement(loading_screen);
+        showElement(quote_section);
     }
- 
- }
 
-
-// accepts an HTML element node and hide the specific element from the DOM 
-const hideElement = async (ele)=>{
-    ele.classList.add("d-none");
 }
 
-
-// accepts an HTML hidden element node and display the specific element from the DOM 
-const showElement = async (ele)=>{
-    ele.classList.remove("d-none");
+// Displays a rondom quote each time 
+const displayNextRandomQuote = async ()=>{
+    let random_quotes = await fetchData("https://quote-garden.onrender.com/api/v3/quotes/random");
+    renderQuotesToDOM(random_quotes, quote_index, "random");
 }
 
-
-// fetch quote genres and display them in the dropdown element 
-const displayDropDownItems = async (html_dropdown)=>{
-    // HTML div containing dropdown items 
-    let drop_down_container = html_dropdown;
+// fetch quote category and display them in the dropdown element 
+const displayDropDownItems = async ()=>{
     
-    // dynamicly add dropdown items to dropdown container in the DOM 
-    let genres = await fetchData(BASE_URL+"/api/v3/genres");
-    genres.data.forEach(ele => {
+    let category = await fetchData("https://quote-garden.onrender.com/api/v3/genres");
+    category.data.forEach(ele => {
         let drop_down_element = `
         <a class="dropdown-item" href="#">${ele}</a>
         `;
 
-        drop_down_container.insertAdjacentHTML("beforeend", drop_down_element);
+        category_dropdown_btn.insertAdjacentHTML("beforeend", drop_down_element);
     });
-
-    
-
 }
 
+// display quotes based on user prefer category 
+const displayQuotesBaseOnCategory = async (category_name)=>{
+    resetQuoteIndex();
 
-//get 
-const getSelectedCategory = async (html_dropdown)=>{
-    let dropdown_items = document.querySelectorAll(".dropdown-item");
-    let category_name = null;
-    
-    dropdown_items.forEach(ele=>{
-        ele.addEventListener("click", (e)=>{
-            category_name = e.target.innerText;            
-            changeCategory(category_name);
-        })
-        
-    });
+    // update DOM to reflect selected category 
+    category.innerText = category_name;  
 
-    if(category_name === "random"){
-        url = BASE_URL+"/api/v3/quotes/"+category_name;
+    // modify api endpoint based on selected category 
+    let quotes_per_category = "";
+    if(category_name == "random"){
+        quotes_per_category = await fetchData("https://quote-garden.onrender.com/api/v3/quotes/random");
     }
     else{
-        url = BASE_URL+"/api/v3/quotes?genre="+category_name;
+        quotes_per_category= await fetchData(`https://quote-garden.onrender.com/api/v3/quotes?genre=${category_name}`);
     }
+     
+    renderQuotesToDOM(quotes_per_category, quote_index, category_name);
+    controlButtonsDisplay(category_name);
 
-    // get data from API using the customized url 
-    let data =  await fetchData(url);
-
-
-    next_btn.addEventListener("click", ()=>{
-        displayNextQuote(data);});
-    // displayPreviousQuote(previous_btn, quotes);
+    return quotes_per_category;
 
 }
 
-
-const generateRandomQuote = (btn)=>{
-    btn.addEventListener("click", async ()=>{
-        displayQuote(current_category);
-    });
-}
-
-
-const changeCategory = async(selected_category)=>{
-    current_category = selected_category;
-    genre.innerText = current_category;
-    hideElement(author_quotes_section)
-    displayQuote(selected_category);
-}
-
-
-const controlButtonsDisplay = async()=>{
-    if(current_category !== "random"){
+//displays buttons based on the selected catgory
+const controlButtonsDisplay = async(category)=>{
+    if(category !== "random"){
+        console.log("not random");
         hideElement(random_quote_btn);
         showElement(previous_btn);
         showElement(next_btn);
     }
-    else if(current_category === "random"){
+    else if(category === "random"){
         showElement(random_quote_btn);
         hideElement(previous_btn);
         hideElement(next_btn);
     }
 }
 
+// displays next quotes 
+const displayNextQuote = async(quotes, category)=>{
+    // increase quote_index
+    quote_index++
+    renderQuotesToDOM(quotes, quote_index)
 
-const displayNextQuote = async(all_quotes)=>{
-    console.log(all_quotes);
-    
-    
-    if(all_quotes !== null){
-        let total_quote_per_category = all_quotes.data.length;
-         amount_of_undisplayed_quotes = total_quote_per_category-1;
+    let last_index = quotes.data.length-1;
+    if(quote_index > 0){
+        activateElement(previous_btn);
     }
 
-    
-        console.log("display next fnx");
-       
-        // modify quote index to be next quote
-        // quote_index++; 
-        // amount_of_undisplayed_quotes--;
-
-        console.log({"quote index": quote_index, "amount of undisplayed quote": amount_of_undisplayed_quotes});
-        
-
-        //display next quote based on modified index
-        let next_quote = all_quotes.data[quote_index];
-        quote.innerText = next_quote.quoteText;
-        author.innerText = next_quote.quoteAuthor;
-        genre.innerText = current_category;
-
-        if(amount_of_undisplayed_quotes === 0){
-            // disable next button when there's no more quote to display next
-            next_btn.classList.add("disabled");
-        }
-        else if(amount_of_undisplayed_quotes > 1){
-            // disable previous button when there's no more previous quote to display 
-            previous_btn.classList.remove("disabled");
-        } 
-
-        
-    
-
+    if(quote_index === last_index){
+        disableElement(next_btn);
+    }
+     
 }
 
+// displays preious quotes
+const displayPreviousNextQuote = async(quotes, category)=>{
+    // increase quote_index
+    quote_index--
+    console.log("ii", quote_index)
+    renderQuotesToDOM(quotes, quote_index)
 
-const displayPreviousQuote = async(btn, all_quotes)=>{
-    btn.addEventListener("click", ()=>{
-        
-        // modify quote index to be previous quote 
-        quote_index--;
-        amount_of_undisplayed_quotes++
+    let last_index = quotes.data.length-1;
+    if(quote_index === 0){
+        disableElement(previous_btn);
+    }
 
-        //display previous quote based on modified index
-        let previous_quote = all_quotes.data[quote_index];
-        quote.innerText = previous_quote.quoteText;
-        author.innerText = previous_quote.quoteAuthor;
-        genre.innerText = current_category;
-
-
-        if(quote_index === 0){
-            // disable previous button when there's no more previous quote
-            previous_btn.classList.add("disabled");
-        }
-        else if(amount_of_undisplayed_quotes > 0){
-            // disable next button when there's no more quote to display next
-            next_btn.classList.remove("disabled");
-        }
-
-
-    })
+    if(quote_index === last_index-1){
+        activateElement(next_btn);
+    }
+     
 }
-
 
 const displayQuotesBaseOnAuthor = async ()=>{
 
@@ -289,7 +214,8 @@ const displayQuotesBaseOnAuthor = async ()=>{
 
 
     // get all quotes from current author 
-    let data =  await fetchData(BASE_URL+"/api/v3/quotes?author="+author_name);
+    let data =  await fetchData(`https://quote-garden.onrender.com/api/v3/quotes?author=${author_name}`)
+    // fetchData(BASE_URL+"/api/v3/quotes?author="+author_name);
     console.log(data);
 
     
@@ -327,47 +253,42 @@ const displayQuotesBaseOnAuthor = async ()=>{
     });
 }
 
-
-const copyText = async()=>{
+const copyQuote = async()=>{
     // extract quote and author text from DOM element
-    let quote_details = `${quote.innerText} ${author.innerText}`;
+    let quote_details = `${quote_ele.innerText} ${author.innerText}`;
 
     //add to the clip board using writeText (copy text)
     if(navigator.clipboard){
-        let result = await navigator.clipboard.writeText(quote_details);
+        await navigator.clipboard.writeText(quote_details);
         alert("Quote Copied!")
     }
 }
 
-const resetQuote = ()=>{
-    return
-    console.log("reset");
+// make quote index zero for the first quote 
+const resetQuoteIndex = ()=>{
     quote_index = 0;
-    total_quote_per_category = 0;
-    amount_of_undisplayed_quotes = 0;
-    console.log("reset", {"quote index": quote_index, "undisplayed quote": amount_of_undisplayed_quotes, "total quote per category":total_quote_per_category});
-
-    // if(quote_index === 0){
-    //     previous_btn.classList.add("disabled");
-    // }
-    // next_btn.classList.add("disabled");
-
-    // console.log("quote index", quote_index);
-    // console.log("undisplayed", amount_of_undisplayed_quotes);
-
-    // if(amount_of_undisplayed_quotes === 0){
-    //     console.log("no displayed quote");
-    //     previous_btn.classList.add("disabled");
-    //     // disable next button when there's no more quote to display next
-    //     // next_btn.classList.add("disabled");
-    // }
-    // else if(amount_of_undisplayed_quotes > 1){
-    //     // disable previous button when there's no more previous quote to display 
-    //     previous_btn.classList.remove("disabled");
-    // } 
-
-    
+    disableElement(previous_btn);
+    activateElement(next_btn);
 }
+
+// accepts an HTML element node and hide the specific element from the DOM 
+const hideElement = async (ele)=>{
+    ele.classList.add("d-none");
+}
+
+// accepts an HTML hidden element node and display the specific element from the DOM 
+const showElement = async (ele)=>{
+    ele.classList.remove("d-none");
+}
+
+const disableElement = (ele)=>{
+    ele.classList.add("disabled");
+}
+
+const activateElement = (ele)=>{
+    ele.classList.remove("disabled");
+}
+
 
 
 
